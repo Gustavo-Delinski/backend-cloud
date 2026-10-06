@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-task
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ms-task
+  template:
+    metadata:
+      labels:
+        app: ms-task
+    spec:
+      containers:
+        - name: ms-task
+          image: vilugao/ms-task:1.2.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: mysql-task
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_NAME
+              value: taskdb
+            - name: DB_USER
+              value: root
+            - name: DB_PASSWORD
+              value: root
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ms-task
+spec:
+  selector:
+    app: ms-task
+  ports:
+    - port: 8080
+      targetPort: 8080

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-task
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-task
+  template:
+    metadata:
+      labels:
+        app: mysql-task
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.4
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+            - name: MYSQL_DATABASE
+              value: taskdb
+
+              
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-task
+spec:
+  selector:
+    app: mysql-task
+  ports:
+    - port: 3306
+      targetPort: 3306
